@@ -38,30 +38,30 @@ def findOneSolution(n):
             
         prev = nAttacks
         
-        conflicts = []
-        for i in range(n):
-            conflicts.append(numConflicts(state, i, state[i], n))
+        order = [i for i in range(n)]
+        random.shuffle(order)
+        for i in order:
 
-        maxConflicts = max(conflicts)
-        matches = []
-        for k in range(n):
-            if maxConflicts == conflicts[k]:
-                matches.append(k)
-        i = random.choice(matches)
-        conflicts = [999999999 for j in range(n)]
-        
-        for j in range(n):
-            if j == state[i]:
+            if numConflicts(state, i, state[i], n) == 0:
                 continue
-            conflicts[j] = numConflicts(state, i, j, n)
+        
+            conflicts = [999999999 for j in range(n)]
             
-        minConflicts = min(conflicts)
-        matches = []
-        for k in range(n):
-            if minConflicts == conflicts[k]:
-                matches.append(k)
-        j = random.choice(matches)
-        state[i] = j
+            for j in range(n):
+                if j == state[i]:
+                    continue
+                conflicts[j] = numConflicts(state, i, j, n)
+                
+            minConflicts = min(conflicts)
+            matches = []
+            for k in range(n):
+                if minConflicts == conflicts[k]:
+                    matches.append(k)
+            j = random.choice(matches)
+            state[i] = j
+
+            if numAttacks(state) == 0:
+                return state
 
 def numConflicts(state, i, pretend, n):
     conflicts = 0
